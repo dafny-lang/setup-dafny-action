@@ -8,5 +8,5 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: $GITHUB_ACTION_PATH/install-dafny.sh ${{ inputs.version }}
+    - run: $GITHUB_ACTION_PATH/install-dafny.sh ${{ inputs.dafny-version }}
       shell: bash
