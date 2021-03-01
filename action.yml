@@ -1,0 +1,12 @@
+name: 'Install Dafny'
+description: 'Install a packaged release of Dafny'
+inputs:
+  version:
+    description: 'version to install'
+    required: true
+    default: '3.0.0'
+runs:
+  using: "composite"
+  steps:
+    - run: $GITHUB_ACTION_PATH/install-dafny.sh ${{ inputs.version }}
+      shell: bash
