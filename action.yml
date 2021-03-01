@@ -1,5 +1,8 @@
 name: "Install Dafny"
 description: "Install a packaged release of Dafny"
+branding:
+  icon: check-circle
+  color: green
 inputs:
   dafny-version:
     description: "Dafny version to install"
