@@ -1,10 +1,10 @@
-name: 'Install Dafny'
-description: 'Install a packaged release of Dafny'
+name: "Install Dafny"
+description: "Install a packaged release of Dafny"
 inputs:
-  version:
-    description: 'version to install'
+  dafny-version:
+    description: "Dafny version to install"
     required: true
-    default: '3.0.0'
+    default: "3.0.0"
 runs:
   using: "composite"
   steps:

@@ -14,5 +14,5 @@ If you need to use a specific version:
 - name: "Install Dafny"
   uses: tchajed/setup-dafny-action@v1
   with:
-    version: "2.3.0"
+    dafny-version: "2.3.0"
 ```
