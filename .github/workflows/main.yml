@@ -1,0 +1,27 @@
+name: Validate 'setup-dafny-action'
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup-dafny:
+    name: Install Dafny
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        dafny: [2.3.0, 3.0.0, 3.1.0]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: setup-dafny-action ${{ matrix.dafny }}
+        uses: ./
+        with:
+          dafny-version: ${{ matrix.dafny }}
+
+      - name: verify dafny
+        run: __tests__/verify-dafny.sh ${{ matrix.dafny }}
+        shell: bash
