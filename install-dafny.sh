@@ -20,9 +20,8 @@ fi
 
 filename=dafny-${VERSION}-x64-${os_name}.zip
 if [ "$VERSION" = "2.3.0" ]; then
+  os_name="osx-10.14.1"
   filename="dafny-2.3.0.10506-x64-${os_name}.zip"
-elif [ "$VERSION" = "2.2.0" ]; then
-  filename="dafny-2.2.0.10923-x64-${os_name}.zip"
 fi
 
 wget -O dafny.zip "https://github.com/dafny-lang/dafny/releases/download/v${VERSION}/$filename"
