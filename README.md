@@ -1,5 +1,7 @@
 # Install Dafny
 
+[![Validate 'setup-dafny-action'](https://github.com/tchajed/setup-dafny-action/actions/workflows/main.yml/badge.svg)](https://github.com/tchajed/setup-dafny-action/actions/workflows/main.yml)
+
 A GitHub Action to download a binary release of Dafny and add it to the system
 `$PATH`.
 
