@@ -1,6 +1,6 @@
 # Install Dafny
 
-A GitHub Action to download a binary release of Dafny and add it the system
+A GitHub Action to download a binary release of Dafny and add it to the system
 `$PATH`.
 
 ```yml
@@ -16,3 +16,6 @@ If you need to use a specific version:
   with:
     dafny-version: "2.3.0"
 ```
+
+This action transparently works on macOS by detecting the running OS. You can
+just set `runs-on` to a macOS virtual environment like `macos-latest`.
