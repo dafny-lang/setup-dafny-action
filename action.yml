@@ -7,7 +7,7 @@ inputs:
   dafny-version:
     description: "Dafny version to install"
     required: true
-    default: "3.0.0"
+    default: "3.1.0"
 runs:
   using: "composite"
   steps:
