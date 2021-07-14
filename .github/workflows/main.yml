@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
-        dafny: [2.3.0, 3.0.0, 3.1.0]
+        dafny: [2.3.0, 3.0.0, 3.1.0, 3.2.0]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
