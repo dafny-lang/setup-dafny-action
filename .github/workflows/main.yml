@@ -15,7 +15,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        dafny: [2.3.0, 3.0.0, 3.1.0, 3.2.0, 3.3.0, 3.4.0]
+        dafny: [3.0.0, 3.7.3, 3.8.1]
+      include:
+        - os: macos-latest
+          dafny: 2.3.0
+        - os: ubuntu-latest
+          dafny: 2.3.0
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -26,8 +31,12 @@ jobs:
           dafny-version: ${{ matrix.dafny }}
 
       - name: verify dafny
-        run: __tests__/verify-dafny.sh ${{ matrix.dafny }}
         shell: bash
+        run: __tests__/verify-dafny.sh ${{ matrix.dafny }}
+
+      - name: verify something with dafny
+        shell: bash
+        run: dafny /compile:0 __tests__/test.dfy 
 
   unit-tests:
     name: Run tests
