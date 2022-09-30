@@ -16,11 +16,12 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         dafny: [3.0.0, 3.7.3, 3.8.1]
-      include:
-        - os: macos-latest
-          dafny: 2.3.0
-        - os: ubuntu-latest
-          dafny: 2.3.0
+        # Windows 2.3.0 requires mono
+        include:
+          - os: macos-latest
+            dafny: 2.3.0
+          - os: ubuntu-latest
+            dafny: 2.3.0
     steps:
       - name: Checkout
         uses: actions/checkout@v2
