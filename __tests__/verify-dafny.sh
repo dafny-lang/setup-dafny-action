@@ -13,7 +13,7 @@ version="-version"
 
 if [[ $input = nightly* ]]
 then
-  echo "Nightly versions do not output a version number"
+  echo "Nightly versions do not output a version number that matches the full version string"
 	input=""
 fi
 
