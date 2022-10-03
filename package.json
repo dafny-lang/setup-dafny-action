@@ -1,0 +1,48 @@
+{
+  "name": "setup-dafny-action",
+  "version": "2.0.0",
+  "description": "Setup Dafny in a Github Action Runner",
+  "main": "index.js",
+  "scripts": {
+    "lint": "prettier -c *.js *.json *.md test/*.js; eslint **.js test/**.js",
+    "format": "prettier --write -c *.js *.json *.md test/*.js; eslint --fix **.js test/**.js",
+    "package": "ncc build index.js -o dist",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "@actions/core": "^1.9.1",
+    "@actions/tool-cache": "^2.0.1"
+  },
+  "bin": "./local.js",
+  "files": [
+    "*.js"
+  ],
+  "devDependencies": {
+    "@vercel/ncc": "^0.34.0",
+    "chai": "^4.3.6",
+    "eslint": "^8.23.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.3.0",
+    "eslint-plugin-promise": "^6.0.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "mocha": "^10.0.0",
+    "prettier": "^2.7.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write --ignore-path dist/**",
+      "eslint --fix --ignore-pattern dist/**"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}

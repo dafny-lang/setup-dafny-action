@@ -14,8 +14,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest]
-        dafny: [2.3.0, 3.0.0, 3.1.0, 3.2.0, 3.3.0, 3.4.0]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        dafny: [3.0.0, 3.7.3, 3.8.1, nightly-2022-09-23-2bc0042]
+        # Windows 2.3.0 requires mono
+        include:
+          - os: macos-latest
+            dafny: 2.3.0
+          - os: ubuntu-latest
+            dafny: 2.3.0
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -26,5 +32,22 @@ jobs:
           dafny-version: ${{ matrix.dafny }}
 
       - name: verify dafny
-        run: __tests__/verify-dafny.sh ${{ matrix.dafny }}
         shell: bash
+        run: __tests__/verify-dafny.sh ${{ matrix.dafny }}
+
+      - name: verify something with dafny
+        shell: bash
+        run: dafny /compile:0 __tests__/test.dfy 
+
+  unit-tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm test
