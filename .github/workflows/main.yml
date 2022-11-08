@@ -31,6 +31,8 @@ jobs:
         with:
           dafny-version: ${{ matrix.dafny }}
 
+      - run: echo $PATH
+
       - name: verify dafny
         shell: bash
         run: __tests__/verify-dafny.sh ${{ matrix.dafny }}
