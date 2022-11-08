@@ -37,7 +37,7 @@ jobs:
 
       - name: verify something with dafny
         shell: bash
-        run: dafny /compile:0 __tests__/test.dfy -p:TestVerifyOverride="verificationLogger:csv"
+        run: dafny /compile:0 __tests__/test.dfy /verificationLogger:csv
 
       - name: Run the reportgenerator
         shell: bash
