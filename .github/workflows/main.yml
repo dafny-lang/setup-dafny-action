@@ -37,7 +37,11 @@ jobs:
 
       - name: verify something with dafny
         shell: bash
-        run: dafny /compile:0 __tests__/test.dfy 
+        run: dafny /compile:0 __tests__/test.dfy -p:TestVerifyOverride="verificationLogger:csv"
+
+      - name: Run the reportgenerator
+        shell: bash
+        run: dafny-reportgenerator summarize-csv-results --max-resource-count 900000 .
 
   unit-tests:
     name: Run tests

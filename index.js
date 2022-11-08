@@ -1,5 +1,6 @@
 const core = require("@actions/core");
 const tc = require("@actions/tool-cache");
+const exec = require("@actions/exec");
 const os = require("os");
 
 (async function () {
@@ -17,10 +18,19 @@ const os = require("os");
     const cachedPath = await tc.cacheDir(dir + "/dafny", "dafny", version);
 
     core.addPath(cachedPath);
+
+    // Install related tools.
+    // Hopefully in the future we can install Dafny itself this way as well.
+    // For now the zipped releases are simpler because they include Z3.
+    await installDotnetTool("dafny-reportgenerator", "1.*")
   } catch (error) {
     core.setFailed(error.message);
   }
 })();
+
+async function installDotnetTool(toolName, version) {
+  await exec.exec("dotnet", ["tool", "install", "-g", toolName, "--version", version])
+}
 
 // Export functions for testing
 exports.dafnyURL = dafnyURL;
