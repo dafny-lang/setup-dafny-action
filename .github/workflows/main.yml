@@ -14,8 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
-        dafny: [3.8.1]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        dafny: [3.0.0, 3.7.3, 3.8.1, nightly-2022-09-23-2bc0042]
         # Windows 2.3.0 requires mono
         include:
           - os: macos-latest
@@ -31,19 +31,23 @@ jobs:
         with:
           dafny-version: ${{ matrix.dafny }}
 
-      - run: echo $PATH
-      - run: dotnet tool list -g
-
       - name: verify dafny
         shell: bash
         run: __tests__/verify-dafny.sh ${{ matrix.dafny }}
 
       - name: verify something with dafny
+        if: ${{ !(matrix.dafny != "2.3.0" && matrix.dafny != "3.0.0") }}
+        shell: bash
+        run: dafny /compile:0 __tests__/test.dfy
+
+      - name: verify something with dafny (with verification logging)
+        if: matrix.dafny != "2.3.0" && matrix.dafny != "3.0.0")
         shell: bash
         run: dafny /compile:0 __tests__/test.dfy /verificationLogger:csv
 
       - name: Run the reportgenerator
         shell: bash
+        # This will find no results if we didn't run with verification logging on above
         run: dafny-reportgenerator summarize-csv-results --max-resource-count 900000 .
 
   unit-tests:

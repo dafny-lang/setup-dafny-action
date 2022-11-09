@@ -6710,8 +6710,6 @@ const os = __nccwpck_require__(2037);
     // Install related tools.
     // Hopefully in the future we can install Dafny itself this way as well.
     // For now the zipped releases are simpler because they include Z3.
-    core.error(`Going to install reportgenerator`);
-  
     await installDotnetTool("dafny-reportgenerator", "1.*")
   } catch (error) {
     core.setFailed(error.message);
@@ -6719,7 +6717,6 @@ const os = __nccwpck_require__(2037);
 })();
 
 async function installDotnetTool(toolName, version) {
-  core.error(`Installing version ${version} of ${toolName}`);
   await exec.exec("dotnet", ["tool", "install", "-g", toolName, "--version", version])
 }
 
