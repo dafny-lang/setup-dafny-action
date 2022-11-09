@@ -36,8 +36,19 @@ jobs:
         run: __tests__/verify-dafny.sh ${{ matrix.dafny }}
 
       - name: verify something with dafny
+        if: ${{ !(matrix.dafny != '2.3.0' && matrix.dafny != '3.0.0') }}
         shell: bash
-        run: dafny /compile:0 __tests__/test.dfy 
+        run: dafny /compile:0 __tests__/test.dfy
+
+      - name: verify something with dafny (with verification logging)
+        if: matrix.dafny != '2.3.0' && matrix.dafny != '3.0.0'
+        shell: bash
+        run: dafny /compile:0 __tests__/test.dfy /verificationLogger:csv
+
+      - name: Run the reportgenerator
+        shell: bash
+        # This will find no results if we didn't run with verification logging on above
+        run: dafny-reportgenerator summarize-csv-results --max-resource-count 900000 .
 
   unit-tests:
     name: Run tests
