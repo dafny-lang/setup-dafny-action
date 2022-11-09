@@ -32,6 +32,7 @@ jobs:
           dafny-version: ${{ matrix.dafny }}
 
       - run: echo $PATH
+      - run: ls ~/.dotnet/tools
 
       - name: verify dafny
         shell: bash
