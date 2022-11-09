@@ -6688,6 +6688,7 @@ var __webpack_exports__ = {};
 var exports = __webpack_exports__;
 const core = __nccwpck_require__(2186);
 const tc = __nccwpck_require__(7784);
+const exec = __nccwpck_require__(1514);
 const os = __nccwpck_require__(2037);
 
 (async function () {
@@ -6705,10 +6706,22 @@ const os = __nccwpck_require__(2037);
     const cachedPath = await tc.cacheDir(dir + "/dafny", "dafny", version);
 
     core.addPath(cachedPath);
+
+    // Install related tools.
+    // Hopefully in the future we can install Dafny itself this way as well.
+    // For now the zipped releases are simpler because they include Z3.
+    core.error(`Going to install reportgenerator`);
+  
+    await installDotnetTool("dafny-reportgenerator", "1.*")
   } catch (error) {
     core.setFailed(error.message);
   }
 })();
+
+async function installDotnetTool(toolName, version) {
+  core.error(`Installing version ${version} of ${toolName}`);
+  await exec.exec("dotnet", ["tool", "install", "-g", toolName, "--version", version])
+}
 
 // Export functions for testing
 exports.dafnyURL = dafnyURL;
