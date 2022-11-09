@@ -22,6 +22,8 @@ const os = require("os");
     // Install related tools.
     // Hopefully in the future we can install Dafny itself this way as well.
     // For now the zipped releases are simpler because they include Z3.
+    core.error(`Going to install reportgenerator`);
+  
     await installDotnetTool("dafny-reportgenerator", "1.*")
   } catch (error) {
     core.setFailed(error.message);
