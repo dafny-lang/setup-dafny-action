@@ -41,7 +41,7 @@ jobs:
         run: dafny /compile:0 __tests__/test.dfy
 
       - name: verify something with dafny (with verification logging)
-        if: matrix.dafny != '2.3.0' && matrix.dafny != '3.0.0')
+        if: matrix.dafny != '2.3.0' && matrix.dafny != '3.0.0'
         shell: bash
         run: dafny /compile:0 __tests__/test.dfy /verificationLogger:csv
 
