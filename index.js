@@ -29,7 +29,7 @@ const os = require("os");
 })();
 
 async function installDotnetTool(toolName, version) {
-  core.info(`Installing version ${version} of ${toolName}`);
+  core.error(`Installing version ${version} of ${toolName}`);
   await exec.exec("dotnet", ["tool", "install", "-g", toolName, "--version", version])
 }
 
