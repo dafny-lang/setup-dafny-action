@@ -20,7 +20,7 @@ describe("dafnyURL", () => {
   it("latest nightly usage", async () => {
     const test = await dafnyURL("nightly-latest", "ubuntu-16.04");
     expect(test).to.match(
-      /^https:\/\/github.com\/dafny-lang\/dafny\/releases\/download\/nightly\/dafny-.*-nightly-/
+      /^https:\/\/github.com\/dafny-lang\/dafny\/releases\/download\/nightly\/dafny-nightly-/
     );
   });
 

@@ -55,10 +55,9 @@ async function dafnyURL(version, distribution) {
 }
 
 async function latestNightlyVersion() {
-  // Shamelessly copied from dafny-lang/ide-vscode
+  // Shamelessly copied and modified from dafny-lang/ide-vscode
   // I'd prefer to use the GitHub API to list the assets under the "nightly" release,
   // but @actions/github requires authentication.
-  // This method has the advantage of relying on more rigourous dotnet tool metadata at least.
   const { exitCode, stdout, stderr } = await exec.getExecOutput(
     "dotnet",
     ["tool", "search", "Dafny", "--detail", "--prerelease"],
@@ -85,9 +84,10 @@ async function latestNightlyVersion() {
   });
   dates.sort((a, b) => (a.date < b.date ? 1 : -1));
   const toolVersion = nightlies[dates[0].index];
+  const version = toolVersion.slice(toolVersion.indexOf("-") + 1);
 
-  core.info(`Using latest nightly version: ${toolVersion}`);
-  return toolVersion;
+  core.info(`Using latest nightly version: ${version}`);
+  return version;
 }
 
 function getDistribution(platform, version) {
