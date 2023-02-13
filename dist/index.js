@@ -6772,7 +6772,9 @@ async function latestNightlyVersion() {
   });
   dates.sort((a, b) => (a.date < b.date ? 1 : -1));
   const toolVersion = nightlies[dates[0].index];
-  const version = toolVersion.slice(toolVersion.indexOf("-") + 1)
+
+  // Slice off the "3.11.0.50201-" from 3.11.0.50201-nightly-2023-02-13-14bc57f, for e.g.
+  const version = toolVersion.slice(toolVersion.indexOf("-") + 1);
 
   core.info(`Using latest nightly version: ${version}`);
   return version;
@@ -6784,8 +6786,8 @@ function getDistribution(platform, version) {
       ? "osx-10.14.1"
       : "osx-10.14.2"
     : platform === "win32" // windows
-      ? "win"
-      : "ubuntu-16.04"; // Everything else is linux...
+    ? "win"
+    : "ubuntu-16.04"; // Everything else is linux...
 }
 
 })();
