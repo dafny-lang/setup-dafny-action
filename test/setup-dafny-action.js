@@ -16,6 +16,14 @@ describe("dafnyURL", () => {
     );
   });
 
+  // TODO: Really we want to say "latest 3.x nightly" so that we don't automatically pick up major version bumps
+  it("latest nightly usage", () => {
+    const test = dafnyURL("latest-nightly", "ubuntu-16.04");
+    expect(test).to.match(
+      /^https:\/\/github.com\/dafny-lang\/dafny\/releases\/download\/nightly\/dafny-nightly-/
+    );
+  });
+
   it("version 2.3.0", () => {
     const test = dafnyURL("2.3.0", "win");
     // https://github.com/dafny-lang/dafny/releases/download/v2.3.0/dafny-2.3.0.10506-x64-osx-10.14.1.zip

@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        dafny: [3.0.0, 3.7.3, 3.8.1, nightly-2022-09-23-2bc0042]
+        dafny: [3.0.0, 3.7.3, 3.8.1, nightly-2022-09-23-2bc0042, nightly-latest]
         # Windows 2.3.0 requires mono
         include:
           - os: macos-latest
