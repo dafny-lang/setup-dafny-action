@@ -50,7 +50,7 @@ async function latestNightlyVersion() {
   // I'd prefer to use the GitHub API to list the assets under the "nightly" release,
   // but @actions/github requires authentication.
   // This method has the advantage of relying on more rigourous dotnet tool metadata at least.
-  const { stdout } = await execFileAsync("dotnet", [ 'tool', 'search', 'Dafny', '--detail', '--prerelease' ])
+  const { exitCode, stdout, stderr } = await exec.getExecOutput("dotnet", [ 'tool', 'search', 'Dafny', '--detail', '--prerelease' ], {silent: true})
   const entries = stdout.split('----------------').map(entry => entry.split('\n').filter(e => e !== ''))
   const dafnyEntry = entries.filter(entry => entry[0] === 'dafny')[0]
   const versionsIndex = dafnyEntry.findIndex(v => v.startsWith('Versions:'))
