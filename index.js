@@ -70,6 +70,7 @@ async function latestNightlyVersion() {
   const entries = stdout
     .split("----------------")
     .map((entry) => entry.split("\n").filter((e) => e !== ""));
+  await console.log(entries)
   const dafnyEntry = entries.filter((entry) => entry[0] === "dafny")[0];
   const versionsIndex = dafnyEntry.findIndex((v) => v.startsWith("Versions:"));
   const versions = dafnyEntry
