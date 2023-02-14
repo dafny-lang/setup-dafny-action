@@ -56,6 +56,13 @@ async function dafnyURL(version, distribution) {
 
 async function latestNightlyVersion() {
   // Shamelessly copied and modified from dafny-lang/ide-vscode.
+  // Parsing the dotnet tool output is obviously not great,
+  // and we could consider using the NuGet API in the future.
+  // Alternatively if we move to installing Dafny using `dotnet tool install`
+  // we could use the `--prerelease` flag, although that assumes
+  // that all nightly builds use a fresh version number,
+  // and can't be used together with `--version` to express something like
+  // "install the latest 3.X version including prereleases".
   const { exitCode, stdout, stderr } = await exec.getExecOutput(
     "dotnet",
     ["tool", "search", "Dafny", "--detail", "--prerelease"],
@@ -68,7 +75,7 @@ async function latestNightlyVersion() {
   }
   const entries = stdout
     .split("----------------")
-    .map((entry) => entry.split("\r?\n").filter((e) => e !== ""));
+    .map((entry) => entry.split(/\r?\n/).filter((e) => e !== ""));
   const dafnyEntry = entries.filter((entry) => entry[0] === "dafny")[0];
   const versionsIndex = dafnyEntry.findIndex((v) => v.startsWith("Versions:"));
   const versions = dafnyEntry
