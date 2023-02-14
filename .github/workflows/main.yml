@@ -27,7 +27,7 @@ jobs:
       # perhaps because it is lazily downloading and installing assets.
       # It helps to hit that here so we don't hit it in a mocha test with a tight timeout.
       - name: Warm up dotnet tool
-      - run: dotnet tool search --help
+        run: dotnet tool search --help
 
       - name: Checkout
         uses: actions/checkout@v2
