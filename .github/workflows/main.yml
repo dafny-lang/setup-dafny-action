@@ -23,6 +23,8 @@ jobs:
           - os: ubuntu-latest
             dafny: 2.3.0
     steps:
+      - run: dotnet tool search --help
+
       - name: Checkout
         uses: actions/checkout@v2
 
