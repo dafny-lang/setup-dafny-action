@@ -6754,11 +6754,9 @@ async function latestNightlyVersion() {
       `dotnet tool command failed (exitCode ${exitCode}):\n${stderr}"`
     );
   }
-  await console.log(stdout)
   const entries = stdout
     .split("----------------")
-    .map((entry) => entry.split("\n").filter((e) => e !== ""));
-  await console.log(entries)
+    .map((entry) => entry.split("\r?\n").filter((e) => e !== ""));
   const dafnyEntry = entries.filter((entry) => entry[0] === "dafny")[0];
   const versionsIndex = dafnyEntry.findIndex((v) => v.startsWith("Versions:"));
   const versions = dafnyEntry
