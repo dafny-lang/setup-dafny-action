@@ -16,13 +16,12 @@ describe("dafnyURL", () => {
     );
   });
 
-  // TODO: Really we want to say "latest 3.x nightly" so that we don't automatically pick up major version bumps
   it("latest nightly usage", async () => {
     const test = await dafnyURL("nightly-latest", "ubuntu-16.04");
     expect(test).to.match(
       /^https:\/\/github.com\/dafny-lang\/dafny\/releases\/download\/nightly\/dafny-nightly-/
     );
-  });
+  }).timeout(5000); // Invoking and parsing the output of `dotnet tool search` can take a bit over 2 seconds
 
   it("version 2.3.0", async () => {
     const test = await dafnyURL("2.3.0", "win");

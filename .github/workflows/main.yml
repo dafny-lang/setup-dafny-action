@@ -23,6 +23,10 @@ jobs:
           - os: ubuntu-latest
             dafny: 2.3.0
     steps:
+      # The first call to `dotnet tool` on a fresh runner sometimes takes multiple minutes,
+      # perhaps because it is lazily downloading and installing assets.
+      # It helps to hit that here so we don't hit it in a mocha test with a tight timeout.
+      - name: Warm up dotnet tool
       - run: dotnet tool search --help
 
       - name: Checkout
