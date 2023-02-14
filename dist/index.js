@@ -6743,9 +6743,7 @@ async function dafnyURL(version, distribution) {
 }
 
 async function latestNightlyVersion() {
-  // Shamelessly copied and modified from dafny-lang/ide-vscode
-  // I'd prefer to use the GitHub API to list the assets under the "nightly" release,
-  // but @actions/github requires authentication.
+  // Shamelessly copied and modified from dafny-lang/ide-vscode.
   const { exitCode, stdout, stderr } = await exec.getExecOutput(
     "dotnet",
     ["tool", "search", "Dafny", "--detail", "--prerelease"],
@@ -6756,6 +6754,7 @@ async function latestNightlyVersion() {
       `dotnet tool command failed (exitCode ${exitCode}):\n${stderr}"`
     );
   }
+  await console.log(stdout)
   const entries = stdout
     .split("----------------")
     .map((entry) => entry.split("\n").filter((e) => e !== ""));
