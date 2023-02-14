@@ -21,7 +21,7 @@ describe("dafnyURL", () => {
     expect(test).to.match(
       /^https:\/\/github.com\/dafny-lang\/dafny\/releases\/download\/nightly\/dafny-nightly-/
     );
-  }).timeout(5000); // Invoking and parsing the output of `dotnet tool search` can take a bit over 2 seconds
+  }).timeout(20_000); // Invoking and parsing the output of `dotnet tool search` can take well over 2 seconds
 
   it("version 2.3.0", async () => {
     const test = await dafnyURL("2.3.0", "win");
