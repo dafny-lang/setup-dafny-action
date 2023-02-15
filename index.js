@@ -42,6 +42,8 @@ async function installDotnetTool(toolName, version) {
 // Export functions for testing
 exports.dafnyURL = dafnyURL;
 exports.getDistribution = getDistribution;
+exports.latestNightlyVersionFromDotnetToolSearch =
+  latestNightlyVersionFromDotnetToolSearch;
 
 async function dafnyURL(version, distribution) {
   const versionPath = version.startsWith("nightly") ? "nightly" : `v${version}`;
@@ -55,14 +57,6 @@ async function dafnyURL(version, distribution) {
 }
 
 async function latestNightlyVersion() {
-  // Shamelessly copied and modified from dafny-lang/ide-vscode.
-  // Parsing the dotnet tool output is obviously not great,
-  // and we could consider using the NuGet API in the future.
-  // Alternatively if we move to installing Dafny using `dotnet tool install`
-  // we could use the `--prerelease` flag, although that assumes
-  // that all nightly builds use a fresh version number,
-  // and can't be used together with `--version` to express something like
-  // "install the latest 3.X version including prereleases".
   const { exitCode, stdout, stderr } = await exec.getExecOutput(
     "dotnet",
     ["tool", "search", "Dafny", "--detail", "--prerelease"],
@@ -73,7 +67,19 @@ async function latestNightlyVersion() {
       `dotnet tool command failed (exitCode ${exitCode}):\n${stderr}"`
     );
   }
-  const entries = stdout
+  return latestNightlyVersionFromDotnetToolSearch(stdout);
+}
+
+function latestNightlyVersionFromDotnetToolSearch(output) {
+  // Shamelessly copied and modified from dafny-lang/ide-vscode.
+  // Parsing the dotnet tool output is obviously not great,
+  // and we could consider using the NuGet API in the future.
+  // Alternatively if we move to installing Dafny using `dotnet tool install`
+  // we could use the `--prerelease` flag, although that assumes
+  // that all nightly builds use a fresh version number,
+  // and can't be used together with `--version` to express something like
+  // "install the latest 3.X version including prereleases".
+  const entries = output
     .split("----------------")
     .map((entry) => entry.split(/\r?\n/).filter((e) => e !== ""));
   const dafnyEntry = entries.filter((entry) => entry[0] === "dafny")[0];
@@ -83,12 +89,12 @@ async function latestNightlyVersion() {
     .map((versionLine) => versionLine.trimStart().split(" ")[0]);
 
   const nightlies = versions.filter((l) => l.includes("nightly"));
-  const dates = nightlies.map((n, index) => {
-    const split = n.split("-");
-    return { index, date: split[2] + split[3] + split[4] };
+  const dates = nightlies.map((nightly) => {
+    const date = new Date(nightly.split("-").slice(2, 5).join("-"));
+    return { nightly, date };
   });
   dates.sort((a, b) => (a.date < b.date ? 1 : -1));
-  const toolVersion = nightlies[dates[0].index];
+  const toolVersion = dates[0].nightly;
 
   // Slice off the "3.11.0.50201-" from 3.11.0.50201-nightly-2023-02-13-14bc57f, for e.g.
   const version = toolVersion.slice(toolVersion.indexOf("-") + 1);
