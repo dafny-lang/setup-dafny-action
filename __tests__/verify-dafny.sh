@@ -26,7 +26,7 @@ fi
 echo "Expected Dafny Version: $expectedVersionString"
 dafny_version="$(dafny $version)"
 echo "Found $dafny_version"
-if ! echo "$dafny_version" | grep -q "Dafny $expectedVersionString"; then
+if ! echo "$dafny_version" | grep -qi "Dafny $expectedVersionString"; then
   echo "Unexpected version" 1>&2
   exit 1
 fi
