@@ -21,8 +21,10 @@ jobs:
         include:
           - os: macos-latest
             dafny: 2.3.0
+            latest-nightly: false
           - os: ubuntu-latest
             dafny: 2.3.0
+            latest-nightly: false
     steps:
       # The first call to `dotnet tool` on a fresh runner sometimes takes multiple minutes,
       # perhaps because it is lazily downloading and installing assets.
@@ -41,7 +43,7 @@ jobs:
 
       - name: verify dafny
         shell: bash
-        run: __tests__/verify-dafny.sh ${{ matrix.dafny }}
+        run: __tests__/verify-dafny.sh ${{ matrix.latest-nightly ? 'nightly' : matrix.dafny }}
 
       - name: verify something with dafny
         if: ${{ !(matrix.dafny != '2.3.0' && matrix.dafny != '3.0.0') }}
