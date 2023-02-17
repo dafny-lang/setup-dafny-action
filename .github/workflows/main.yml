@@ -16,6 +16,7 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         dafny: [3.0.0, 3.7.3, 3.8.1, nightly-2023-02-13-14bc57f, nightly-latest]
+        latest-nightly: [true, false]
         # Windows 2.3.0 requires mono
         include:
           - os: macos-latest
@@ -36,6 +37,7 @@ jobs:
         uses: ./
         with:
           dafny-version: ${{ matrix.dafny }}
+          dafny-latest-nightly: ${{ matrix.latest-nightly }}
 
       - name: verify dafny
         shell: bash

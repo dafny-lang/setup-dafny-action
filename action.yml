@@ -7,7 +7,10 @@ inputs:
   dafny-version:
     description: "Dafny version to install"
     required: true
-    default: "3.1.0"
+  dafny-latest-nightly:
+    description: "Whether to install the latest prerelease within the same major version"
+    required: false
+    default: "false"
 runs:
   using: "node16"
   main: "dist/index.js"
