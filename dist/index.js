@@ -6695,7 +6695,8 @@ const os = __nccwpck_require__(2037);
   try {
     const version = core.getInput("dafny-version", { required: true });
     const distribution = getDistribution(os.platform(), version);
-    const url = await dafnyURL(version, distribution);
+    const latestNightly = core.getBooleanInput("dafny-latest-nightly", { required: false });
+    const url = await dafnyURL(version, distribution, latestNightly);
 
     core.info(`Dafny Url: ${url}`);
     core.info(`Dafny Distribution: ${distribution}`);
@@ -6730,12 +6731,17 @@ async function installDotnetTool(toolName, version) {
 // Export functions for testing
 exports.dafnyURL = dafnyURL;
 exports.getDistribution = getDistribution;
-exports.latestNightlyVersionFromDotnetToolSearch = latestNightlyVersionFromDotnetToolSearch;
+exports.latestNightlyVersionFromDotnetToolSearch =
+  latestNightlyVersionFromDotnetToolSearch;
 
-async function dafnyURL(version, distribution) {
-  const versionPath = version.startsWith("nightly") ? "nightly" : `v${version}`;
+async function dafnyURL(version, distribution, latestNightly) {
+  const versionPath = version.startsWith("nightly") || latestNightly ? "nightly" : `v${version}`;
   if (version == "nightly-latest") {
-    version = await latestNightlyVersion();
+    latestNightly = true
+    version = ""
+  }
+  if (latestNightly) {
+    version = await latestNightlyVersion(version);
   }
   const root = "https://github.com/dafny-lang/dafny/releases/download";
   return `${root}/${versionPath}/dafny-${
@@ -6743,7 +6749,7 @@ async function dafnyURL(version, distribution) {
   }-x64-${distribution}.zip`;
 }
 
-async function latestNightlyVersion() {
+async function latestNightlyVersion(version) {
   const { exitCode, stdout, stderr } = await exec.getExecOutput(
     "dotnet",
     ["tool", "search", "Dafny", "--detail", "--prerelease"],
@@ -6754,10 +6760,16 @@ async function latestNightlyVersion() {
       `dotnet tool command failed (exitCode ${exitCode}):\n${stderr}"`
     );
   }
-  return latestNightlyVersionFromDotnetToolSearch(stdout)
+  // Return the latest within the same major version (if one was requested)
+  baseVersion = version
+  const firstDotIndex = version.indexOf(".")
+  if (firstDotIndex > 0) {
+    baseVersion = version.substring(0, firstDotIndex)
+  }
+  return latestNightlyVersionFromDotnetToolSearch(baseVersion, stdout);
 }
 
-function latestNightlyVersionFromDotnetToolSearch(output) {
+function latestNightlyVersionFromDotnetToolSearch(baseVersion, output) {
   // Shamelessly copied and modified from dafny-lang/ide-vscode.
   // Parsing the dotnet tool output is obviously not great,
   // and we could consider using the NuGet API in the future.
@@ -6775,9 +6787,9 @@ function latestNightlyVersionFromDotnetToolSearch(output) {
     .slice(versionsIndex + 1)
     .map((versionLine) => versionLine.trimStart().split(" ")[0]);
 
-  const nightlies = versions.filter((l) => l.includes("nightly"));
-  const dates = nightlies.map(nightly => {
-    const date = new Date(nightly.split('-').slice(2, 5).join('-'))
+  const nightlies = versions.filter((l) => l.startsWith(baseVersion) && l.includes("nightly"));
+  const dates = nightlies.map((nightly) => {
+    const date = new Date(nightly.split("-").slice(2, 5).join("-"));
     return { nightly, date };
   });
   dates.sort((a, b) => (a.date < b.date ? 1 : -1));

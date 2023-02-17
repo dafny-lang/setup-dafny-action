@@ -16,12 +16,15 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
         dafny: [3.0.0, 3.7.3, 3.8.1, nightly-2023-02-13-14bc57f, nightly-latest]
+        latest-nightly: [true, false]
         # Windows 2.3.0 requires mono
         include:
           - os: macos-latest
             dafny: 2.3.0
+            latest-nightly: false
           - os: ubuntu-latest
             dafny: 2.3.0
+            latest-nightly: false
     steps:
       # The first call to `dotnet tool` on a fresh runner sometimes takes multiple minutes,
       # perhaps because it is lazily downloading and installing assets.
@@ -36,10 +39,11 @@ jobs:
         uses: ./
         with:
           dafny-version: ${{ matrix.dafny }}
+          dafny-latest-nightly: ${{ matrix.latest-nightly }}
 
       - name: verify dafny
         shell: bash
-        run: __tests__/verify-dafny.sh ${{ matrix.dafny }}
+        run: __tests__/verify-dafny.sh ${{ matrix.latest-nightly ? 'nightly' : matrix.dafny }}
 
       - name: verify something with dafny
         if: ${{ !(matrix.dafny != '2.3.0' && matrix.dafny != '3.0.0') }}

@@ -22,9 +22,18 @@ describe("dafnyURL", () => {
 
   it("latest nightly parsing logic", async () => {
     const test = latestNightlyVersionFromDotnetToolSearch(
+      "",
       sampleDotnetToolSearchOutput
     );
-    expect(test).to.equal("nightly-2023-02-15-567a5ba");
+    expect(test).to.equal("nightly-2050-01-01-abcdefg");
+  });
+
+  it("latest nightly parsing logic (within major version)", async () => {
+    const test = latestNightlyVersionFromDotnetToolSearch(
+      "3.10.0",
+      sampleDotnetToolSearchOutput
+    );
+    expect(test).to.equal("nightly-2023-02-01-c5b4e15");
   });
 
   it("latest nightly usage", async () => {
@@ -83,6 +92,8 @@ Versions:
 	3.11.0.50201-nightly-2023-02-14-7cf7164 Downloads: 27
 	3.11.0.50201-nightly-2023-02-15-567a5ba Downloads: 14
 	3.11.0.50201 Downloads: 94
+  4.0.0.99999 Downloads: 0
+  4.0.0.99999-nightly-2050-01-01-abcdefg Downloads: 0
 
 ----------------
 dafny-reportgenerator
