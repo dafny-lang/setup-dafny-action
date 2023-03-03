@@ -116,7 +116,9 @@ function getDistribution(platform, version) {
   // Since every nightly published after this edit will be configured in the post-3.12 fashion, and this script
   // fetches the latest nightly, it's safe to just condition this on 'nightly' and not 'nightly-date' for a date
   // after a certain point.
-  const post312 = versionToNumeric(version) >= versionToNumeric("3.13");
+  const post312 =
+    version.includes("nightly") ||
+    versionToNumeric(version) >= versionToNumeric("3.13");
   if (post312) {
     switch (platform) {
       case "win32":
