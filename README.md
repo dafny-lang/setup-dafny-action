@@ -7,14 +7,14 @@ A GitHub Action to download a binary release of Dafny and add it to the system
 
 ```yml
 - name: "Install Dafny"
-  uses: dafny-lang/setup-dafny-action@v1
+  uses: dafny-lang/setup-dafny-action@v1.6.1
 ```
 
 If you need to use a specific version:
 
 ```yml
 - name: "Install Dafny"
-  uses: dafny-lang/setup-dafny-action@v1
+  uses: dafny-lang/setup-dafny-action@v1.6.1
   with:
     dafny-version: "2.3.0"
 ```
