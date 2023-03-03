@@ -6730,7 +6730,8 @@ async function installDotnetTool(toolName, version) {
 // Export functions for testing
 exports.dafnyURL = dafnyURL;
 exports.getDistribution = getDistribution;
-exports.latestNightlyVersionFromDotnetToolSearch = latestNightlyVersionFromDotnetToolSearch;
+exports.latestNightlyVersionFromDotnetToolSearch =
+  latestNightlyVersionFromDotnetToolSearch;
 
 async function dafnyURL(version, distribution) {
   const versionPath = version.startsWith("nightly") ? "nightly" : `v${version}`;
@@ -6754,7 +6755,7 @@ async function latestNightlyVersion() {
       `dotnet tool command failed (exitCode ${exitCode}):\n${stderr}"`
     );
   }
-  return latestNightlyVersionFromDotnetToolSearch(stdout)
+  return latestNightlyVersionFromDotnetToolSearch(stdout);
 }
 
 function latestNightlyVersionFromDotnetToolSearch(output) {
@@ -6776,8 +6777,8 @@ function latestNightlyVersionFromDotnetToolSearch(output) {
     .map((versionLine) => versionLine.trimStart().split(" ")[0]);
 
   const nightlies = versions.filter((l) => l.includes("nightly"));
-  const dates = nightlies.map(nightly => {
-    const date = new Date(nightly.split('-').slice(2, 5).join('-'))
+  const dates = nightlies.map((nightly) => {
+    const date = new Date(nightly.split("-").slice(2, 5).join("-"));
     return { nightly, date };
   });
   dates.sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -6790,14 +6791,41 @@ function latestNightlyVersionFromDotnetToolSearch(output) {
   return version;
 }
 
+function versionToNumeric(version) {
+  // Also copied and modified from dafny-lang/ide-vscode.
+  // Switching to dotnet tool install would avoid having to do this...
+  const numbers = version.split(".").map((x) => Number.parseInt(x));
+  return (numbers[0] * 1000 + (numbers[1] ?? 0)) * 1000 + (numbers[2] ?? 0);
+}
+
 function getDistribution(platform, version) {
-  return platform === "darwin" // Osx
-    ? version == "2.3.0"
-      ? "osx-10.14.1"
-      : "osx-10.14.2"
-    : platform === "win32" // windows
-    ? "win"
-    : "ubuntu-16.04"; // Everything else is linux...
+  // Also copied and modified from dafny-lang/ide-vscode.
+
+  // Since every nightly published after this edit will be configured in the post-3.12 fashion, and this script
+  // fetches the latest nightly, it's safe to just condition this on 'nightly' and not 'nightly-date' for a date
+  // after a certain point.
+  const post312 =
+    version.includes("nightly") ||
+    versionToNumeric(version) >= versionToNumeric("3.13");
+  if (post312) {
+    switch (platform) {
+      case "win32":
+        return "windows-2019";
+      case "darwin":
+        return "macos-11";
+      default:
+        return "ubuntu-20.04";
+    }
+  } else {
+    switch (platform) {
+      case "win32":
+        return "win";
+      case "darwin":
+        return version == "2.3.0" ? "osx-10.14.1" : "osx-10.14.2";
+      default:
+        return "ubuntu-16.04";
+    }
+  }
 }
 
 })();
