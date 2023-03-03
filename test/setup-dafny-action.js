@@ -101,12 +101,18 @@ Versions:
 describe("getDistribution", () => {
   // https://nodejs.org/docs/latest/api/os.html#os_os_platform
   [
+    ["darwin", "4.0.0", "macos-11"],
+    ["darwin", "3.13.1", "macos-11"],
     ["darwin", "3.8.1", "osx-10.14.2"],
     ["darwin", "2.3.0", "osx-10.14.1"],
+    ["win32", "4.0.0", "windows-2019"],
+    ["win32", "3.13.1", "windows-2019"],
     ["win32", "3.8.1", "win"],
     ["win32", "2.3.0", "win"],
 
     // Everything else is treated a ubuntu linux
+    ["freebsd", "4.0.0", "ubuntu-20.04"],
+    ["freebsd", "3.13.1", "ubuntu-20.04"],
     ["aix", "3.8.1", "ubuntu-16.04"],
     ["freebsd", "3.8.1", "ubuntu-16.04"],
     ["linux", "3.8.1", "ubuntu-16.04"],
