@@ -28,7 +28,7 @@ const os = require("os");
     // For now the zipped releases are simpler because they include Z3.
     await installDotnetTool("dafny-reportgenerator", "1.*");
 
-    core.exportVariable("DAFNY_VERSION", fullVersion);
+    // core.exportVariable("DAFNY_VERSION", fullVersion);
   } catch (error) {
     core.setFailed(error.message);
   }
