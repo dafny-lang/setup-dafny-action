@@ -23,7 +23,7 @@ describe("dafnyURLAndFullVersion", () => {
       "https://github.com/dafny-lang/dafny/releases/download/nightly/dafny-nightly-2022-09-23-2bc0042-x64-ubuntu-16.04.zip"
     );
     expect(fullVersion).to.equal("3.8.1.40901-nightly-2022-09-23-2bc0042");
-  });
+  }).timeout(20_000); // Invoking and parsing the output of `dotnet tool search` can take well over 2 seconds
 
   it("latest nightly parsing logic", async () => {
     const test = resolveNightlyVersionFromDotnetToolSearch(
