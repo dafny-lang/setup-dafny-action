@@ -30,3 +30,12 @@ if ! echo "$dafny_version" | grep -qi "Dafny $expectedVersionString"; then
   echo "Unexpected version" 1>&2
   exit 1
 fi
+
+# check the DAFNY_VERSION environment variable as well
+# (which is more useful when installing nightly versions)
+
+if [[ $expectedVersionString != "" && $DAFNY_VERSION != $expectedVersionString ]]
+then
+  echo "DAFNY_VERSION not set correctly: $DAFNY_VERSION"
+	exit 1
+fi

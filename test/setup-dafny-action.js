@@ -1,47 +1,58 @@
 const {
-  dafnyURL,
+  dafnyURLAndFullVersion,
   getDistribution,
-  latestNightlyVersionFromDotnetToolSearch,
+  resolveNightlyVersionFromDotnetToolSearch,
 } = require("../index");
 const { expect } = require("chai");
 
-describe("dafnyURL", () => {
+describe("dafnyURLAndFullVersion", () => {
   it("basic usage", async () => {
-    const test = await dafnyURL("3.8.1", "win");
-    expect(test).to.equal(
+    const { url, fullVersion } = await dafnyURLAndFullVersion("3.8.1", "win");
+    expect(url).to.equal(
       "https://github.com/dafny-lang/dafny/releases/download/v3.8.1/dafny-3.8.1-x64-win.zip"
     );
+    expect(fullVersion).to.equal("3.8.1");
   });
 
   it("nightly usage", async () => {
-    const test = await dafnyURL("nightly-2022-09-23-2bc0042", "ubuntu-16.04");
-    expect(test).to.equal(
+    const { url, fullVersion } = await dafnyURLAndFullVersion(
+      "nightly-2022-09-23-2bc0042",
+      "ubuntu-16.04"
+    );
+    expect(url).to.equal(
       "https://github.com/dafny-lang/dafny/releases/download/nightly/dafny-nightly-2022-09-23-2bc0042-x64-ubuntu-16.04.zip"
     );
-  });
+    expect(fullVersion).to.equal("3.8.1.40901-nightly-2022-09-23-2bc0042");
+  }).timeout(20_000); // Invoking and parsing the output of `dotnet tool search` can take well over 2 seconds
 
   it("latest nightly parsing logic", async () => {
-    const test = latestNightlyVersionFromDotnetToolSearch(
-      sampleDotnetToolSearchOutput
+    const test = resolveNightlyVersionFromDotnetToolSearch(
+      sampleDotnetToolSearchOutput,
+      "nightly-latest"
     );
-    expect(test).to.equal("nightly-2023-02-15-567a5ba");
+    expect(test).to.equal("3.11.0.50201-nightly-2023-02-15-567a5ba");
   });
 
   it("latest nightly usage", async () => {
-    const test = await dafnyURL("nightly-latest", "ubuntu-16.04");
-    expect(test).to.match(
+    const { url, fullVersion } = await dafnyURLAndFullVersion(
+      "nightly-latest",
+      "ubuntu-16.04"
+    );
+    expect(url).to.match(
       /^https:\/\/github.com\/dafny-lang\/dafny\/releases\/download\/nightly\/dafny-nightly-/
     );
+    expect(fullVersion).to.contain("nightly");
   }).timeout(20_000); // Invoking and parsing the output of `dotnet tool search` can take well over 2 seconds
 
   it("version 2.3.0", async () => {
-    const test = await dafnyURL("2.3.0", "win");
+    const { url, fullVersion } = await dafnyURLAndFullVersion("2.3.0", "win");
     // https://github.com/dafny-lang/dafny/releases/download/v2.3.0/dafny-2.3.0.10506-x64-osx-10.14.1.zip
     // https://github.com/dafny-lang/dafny/releases/download/v2.3.0/dafny-2.3.0.10506-x64-ubuntu-16.04.zip
     // https://github.com/dafny-lang/dafny/releases/download/v2.3.0/dafny-2.3.0.10506-x64-win.zip
-    expect(test).to.equal(
+    expect(url).to.equal(
       "https://github.com/dafny-lang/dafny/releases/download/v2.3.0/dafny-2.3.0.10506-x64-win.zip"
     );
+    expect(fullVersion).to.equal("2.3.0");
   });
 });
 

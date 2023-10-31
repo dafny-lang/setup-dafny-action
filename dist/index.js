@@ -6695,8 +6695,12 @@ const os = __nccwpck_require__(2037);
   try {
     const version = core.getInput("dafny-version", { required: true });
     const distribution = getDistribution(os.platform(), version);
-    const url = await dafnyURL(version, distribution);
+    const { url, fullVersion } = await dafnyURLAndFullVersion(
+      version,
+      distribution
+    );
 
+    core.info(`Dafny Version: ${fullVersion}`);
     core.info(`Dafny Url: ${url}`);
     core.info(`Dafny Distribution: ${distribution}`);
 
@@ -6711,6 +6715,8 @@ const os = __nccwpck_require__(2037);
     // Hopefully in the future we can install Dafny itself this way as well.
     // For now the zipped releases are simpler because they include Z3.
     await installDotnetTool("dafny-reportgenerator", "1.*");
+
+    core.exportVariable("DAFNY_VERSION", fullVersion);
   } catch (error) {
     core.setFailed(error.message);
   }
@@ -6728,23 +6734,34 @@ async function installDotnetTool(toolName, version) {
 }
 
 // Export functions for testing
-exports.dafnyURL = dafnyURL;
+exports.dafnyURLAndFullVersion = dafnyURLAndFullVersion;
 exports.getDistribution = getDistribution;
-exports.latestNightlyVersionFromDotnetToolSearch =
-  latestNightlyVersionFromDotnetToolSearch;
+exports.resolveNightlyVersionFromDotnetToolSearch =
+  resolveNightlyVersionFromDotnetToolSearch;
 
-async function dafnyURL(version, distribution) {
+async function dafnyURLAndFullVersion(version, distribution) {
   const versionPath = version.startsWith("nightly") ? "nightly" : `v${version}`;
-  if (version == "nightly-latest") {
-    version = await latestNightlyVersion();
+  var fullVersion;
+  if (version.startsWith("nightly")) {
+    fullVersion = await resolveNightlyVersion(version);
+    // Slice off the "3.11.0.50201-" from 3.11.0.50201-nightly-2023-02-13-14bc57f, for e.g.
+    version = fullVersion.slice(fullVersion.indexOf("-") + 1);
+  } else {
+    fullVersion = version;
   }
   const root = "https://github.com/dafny-lang/dafny/releases/download";
-  return `${root}/${versionPath}/dafny-${
+  const url = `${root}/${versionPath}/dafny-${
     version == "2.3.0" ? "2.3.0.10506" : version
   }-x64-${distribution}.zip`;
+  return { url, fullVersion };
 }
 
-async function latestNightlyVersion() {
+async function resolveNightlyVersion(nightlyVersion) {
+  const output = await dotnetToolSearch();
+  return resolveNightlyVersionFromDotnetToolSearch(output, nightlyVersion);
+}
+
+async function dotnetToolSearch() {
   const { exitCode, stdout, stderr } = await exec.getExecOutput(
     "dotnet",
     ["tool", "search", "Dafny", "--detail", "--prerelease"],
@@ -6755,10 +6772,10 @@ async function latestNightlyVersion() {
       `dotnet tool command failed (exitCode ${exitCode}):\n${stderr}"`
     );
   }
-  return latestNightlyVersionFromDotnetToolSearch(stdout);
+  return stdout;
 }
 
-function latestNightlyVersionFromDotnetToolSearch(output) {
+function resolveNightlyVersionFromDotnetToolSearch(output, nightlyVersion) {
   // Shamelessly copied and modified from dafny-lang/ide-vscode.
   // Parsing the dotnet tool output is obviously not great,
   // and we could consider using the NuGet API in the future.
@@ -6777,18 +6794,28 @@ function latestNightlyVersionFromDotnetToolSearch(output) {
     .map((versionLine) => versionLine.trimStart().split(" ")[0]);
 
   const nightlies = versions.filter((l) => l.includes("nightly"));
-  const dates = nightlies.map((nightly) => {
-    const date = new Date(nightly.split("-").slice(2, 5).join("-"));
-    return { nightly, date };
-  });
-  dates.sort((a, b) => (a.date < b.date ? 1 : -1));
-  const toolVersion = dates[0].nightly;
+  var toolVersion;
+  if (nightlyVersion == "nightly-latest") {
+    const dates = nightlies.map((nightly) => {
+      const date = new Date(nightly.split("-").slice(2, 5).join("-"));
+      return { nightly, date };
+    });
+    dates.sort((a, b) => (a.date < b.date ? 1 : -1));
+    toolVersion = dates[0].nightly;
+  } else {
+    const matchingVersions = versions.filter((nightly) =>
+      nightly.includes(nightlyVersion)
+    );
+    if (matchingVersions.length != 1) {
+      throw new Error(
+        `Did not find exactly one version matching ${nightlyVersion}: ${matchingVersions}"`
+      );
+    }
+    toolVersion = matchingVersions[0];
+  }
 
-  // Slice off the "3.11.0.50201-" from 3.11.0.50201-nightly-2023-02-13-14bc57f, for e.g.
-  const version = toolVersion.slice(toolVersion.indexOf("-") + 1);
-
-  core.info(`Using latest nightly version: ${version}`);
-  return version;
+  core.info(`Using nightly version: ${toolVersion}`);
+  return toolVersion;
 }
 
 function versionToNumeric(version) {
