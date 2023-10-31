@@ -15,7 +15,10 @@ describe("dafnyURLAndFullVersion", () => {
   });
 
   it("nightly usage", async () => {
-    const { url, fullVersion } = await dafnyURLAndFullVersion("nightly-2022-09-23-2bc0042", "ubuntu-16.04");
+    const { url, fullVersion } = await dafnyURLAndFullVersion(
+      "nightly-2022-09-23-2bc0042",
+      "ubuntu-16.04"
+    );
     expect(url).to.equal(
       "https://github.com/dafny-lang/dafny/releases/download/nightly/dafny-nightly-2022-09-23-2bc0042-x64-ubuntu-16.04.zip"
     );
@@ -24,13 +27,17 @@ describe("dafnyURLAndFullVersion", () => {
 
   it("latest nightly parsing logic", async () => {
     const test = resolveNightlyVersionFromDotnetToolSearch(
-      sampleDotnetToolSearchOutput, "nightly-latest"
+      sampleDotnetToolSearchOutput,
+      "nightly-latest"
     );
     expect(test).to.equal("3.11.0.50201-nightly-2023-02-15-567a5ba");
   });
 
   it("latest nightly usage", async () => {
-    const { url, fullVersion } = await dafnyURLAndFullVersion("nightly-latest", "ubuntu-16.04");
+    const { url, fullVersion } = await dafnyURLAndFullVersion(
+      "nightly-latest",
+      "ubuntu-16.04"
+    );
     expect(url).to.match(
       /^https:\/\/github.com\/dafny-lang\/dafny\/releases\/download\/nightly\/dafny-nightly-/
     );

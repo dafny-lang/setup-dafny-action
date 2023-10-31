@@ -6695,7 +6695,10 @@ const os = __nccwpck_require__(2037);
   try {
     const version = core.getInput("dafny-version", { required: true });
     const distribution = getDistribution(os.platform(), version);
-    const { url, fullVersion } = await dafnyURLAndFullVersion(version, distribution);
+    const { url, fullVersion } = await dafnyURLAndFullVersion(
+      version,
+      distribution
+    );
 
     core.info(`Dafny Version: ${fullVersion}`);
     core.info(`Dafny Url: ${url}`);
@@ -6738,6 +6741,7 @@ exports.resolveNightlyVersionFromDotnetToolSearch =
 
 async function dafnyURLAndFullVersion(version, distribution) {
   const versionPath = version.startsWith("nightly") ? "nightly" : `v${version}`;
+  var fullVersion;
   if (version.startsWith("nightly")) {
     fullVersion = await resolveNightlyVersion(version);
     // Slice off the "3.11.0.50201-" from 3.11.0.50201-nightly-2023-02-13-14bc57f, for e.g.
@@ -6799,7 +6803,9 @@ function resolveNightlyVersionFromDotnetToolSearch(output, nightlyVersion) {
     dates.sort((a, b) => (a.date < b.date ? 1 : -1));
     toolVersion = dates[0].nightly;
   } else {
-    const matchingVersions = versions.filter((nightly) => nightly.includes(nightlyVersion));
+    const matchingVersions = versions.filter((nightly) =>
+      nightly.includes(nightlyVersion)
+    );
     if (matchingVersions.length != 1) {
       throw new Error(
         `Did not find exactly one version matching ${nightlyVersion}: ${matchingVersions}"`
