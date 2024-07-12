@@ -62,9 +62,10 @@ async function dafnyURLAndFullVersion(version, distribution) {
     fullVersion = version;
   }
   const root = "https://github.com/dafny-lang/dafny/releases/download";
+  // using the same approach as the dafny-lang/ide-vscode
   const url = `${root}/${versionPath}/dafny-${
     version == "2.3.0" ? "2.3.0.10506" : version
-  }-x64-${distribution}.zip`;
+  }-${os.arch()}-${distribution}.zip`;
   return { url, fullVersion };
 }
 
