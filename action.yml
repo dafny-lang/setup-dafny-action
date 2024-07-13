@@ -17,10 +17,7 @@ runs:
   - uses: actions/setup-node@v4
     with:
       node-version: 16
-  - run: |
-      echo $INPUT_DAFNY-VERSION
-      echo ${{ inputs.dafny-version }}
-      node dist/index.js
+  - run: node dist/index.js
     shell: bash
     env:
       INPUT_DAFNY-VERSION: ${{ inputs.dafny-version }}
