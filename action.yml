@@ -9,5 +9,15 @@ inputs:
     required: true
     default: "3.1.0"
 runs:
-  using: "node16"
-  main: "dist/index.js"
+  using: "composite"
+  steps:
+  - uses: actions/setup-dotnet@v4
+    with:
+      dotnet-version: '6.0.x'
+  - uses: actions/setup-node@v4
+    with:
+      node-version: 16
+  - run: node dist/index.js
+    shell: bash
+    env:
+      INPUT_DAFNY-VERSION: ${{ inputs.dafny-version }}
