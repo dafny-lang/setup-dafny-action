@@ -18,3 +18,4 @@ runs:
     with:
       node-version: 16
   - run: node dist/index.js
+    shell: bash
