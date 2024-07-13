@@ -19,5 +19,5 @@ runs:
       node-version: 16
   - run: node dist/index.js
     shell: bash
-    env:
-      INPUT_DAFNY_VERSION: ${{ inputs.dafny-version }}
+    with:
+      dafny-version: ${{ inputs.dafny-version }}
