@@ -17,7 +17,7 @@ runs:
   - uses: actions/setup-node@v4
     with:
       node-version: 16
-  - run: node dist/index.js
+  - run: node $GITHUB_ACTION_PATH/dist/index.js
     shell: bash
     env:
       INPUT_DAFNY-VERSION: ${{ inputs.dafny-version }}
