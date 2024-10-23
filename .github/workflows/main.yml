@@ -37,6 +37,10 @@ jobs:
         with:
           dafny-version: ${{ matrix.dafny }}
 
+      - name: Check DAFNY_VERSION environment variable
+        shell: bash
+        run: test ${{ matrix.dafny }} = ${{ env.DAFNY_VERSION }}
+
       - name: verify dafny
         shell: bash
         run: __tests__/verify-dafny.sh ${{ matrix.dafny }}
