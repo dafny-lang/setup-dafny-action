@@ -1,0 +1,52 @@
+name: "Build Dafny from source"
+description: "Builds the given branch of Dafny from source"
+inputs:
+  dafny-version:
+    description: "Dafny version to build from source"
+    required: true
+    type: string
+  ref:
+    description: "The Dafny branch, tag or SHA to build"
+    required: true
+    type: string
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Dafny
+      uses: actions/checkout@v4
+      with:
+        repository: dafny-lang/dafny
+        path: dafny
+        ref: ${{ inputs.ref }}
+
+    # TODO: support all three platforms
+    - name: Load Z3
+      shell: bash
+      run: |
+        sudo apt-get update && sudo apt-get install -qq libarchive-tools
+        mkdir -p dafny/Binaries/z3/bin
+        wget -qO- https://github.com/dafny-lang/solver-builds/releases/download/snapshot-2023-08-02/z3-4.12.1-x64-ubuntu-20.04-bin.zip | bsdtar -xf -
+        mv z3-4.12.1 dafny/Binaries/z3/bin/
+        chmod +x dafny/Binaries/z3/bin/z3-4.12.1
+        mkdir -p unzippedRelease/dafny/z3/bin
+        ln dafny/Binaries/z3/bin/z3-4.12.1 unzippedRelease/dafny/z3/bin/z3-4.12.1
+
+    - name: Build Dafny
+      shell: bash
+      run: |
+        dotnet build dafny/Source/Dafny.sln
+
+    - name: Add dafny to PATH
+      shell: bash
+      run: |
+        echo ${{ github.workspace }}/dafny/Scripts >> $GITHUB_PATH
+
+    - name: Export DAFNY_VERSION
+      shell: bash
+      run: |
+        echo "DAFNY_VERSION=${{ inputs.dafny_version }}" >> $GITHUB_ENV
+
+    - name: Install reportgenerator
+      shell: bash
+      run: |
+        dotnet tool install -g dafny-reportgenerator --version 1.*
