@@ -29,4 +29,5 @@ runs:
   - if: ${{ inputs.build-from-source }}
     uses: ./build_dafny_from_source
     with:
+      dafny-version: ${{ inputs.dafny-version }}
       ref: ${{ inputs.build-from-source }}
