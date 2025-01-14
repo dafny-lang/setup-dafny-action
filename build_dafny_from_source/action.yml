@@ -39,7 +39,7 @@ runs:
     - name: Build Dafny
       shell: bash
       run: |
-        dotnet build dafny/Source/Dafny.sln
+        make exe
 
     - name: Add dafny to PATH
       shell: bash
