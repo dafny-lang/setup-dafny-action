@@ -12,6 +12,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - uses: actions/setup-java@v3
+      with:
+        distribution: "corretto"
+        java-version: "17"
+
     - name: Checkout Dafny
       uses: actions/checkout@v4
       with:
