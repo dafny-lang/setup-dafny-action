@@ -15,16 +15,20 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        dafny: [3.0.0, 3.8.1, 3.13.1, 4.0.0, nightly-2023-02-28-80a0e49, nightly-latest]
+        dafny: [3.0.0, 3.8.1, 3.13.1, 4.0.0, 4.9.1, nightly-2023-02-28-80a0e49, nightly-latest]
         include:
           # Windows 2.3.0 requires mono
           - os: macos-latest
             dafny: 2.3.0
           - os: ubuntu-latest
             dafny: 2.3.0
-          # Test building from source from a subset of versions
+          # Test building from source from a subset of versions, but across all platforms
+          - dafny: 4.0.0
+            build-from-source: ''
           - dafny: 4.0.0
             build-from-source: v4.0.0
+          - dafny: 4.9.1
+            build-from-source: ''
           - dafny: 4.9.1
             build-from-source: v4.9.1
         
