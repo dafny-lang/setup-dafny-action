@@ -11,7 +11,6 @@ inputs:
   build-from-source:
     description: "dafny-lang/dafny commit-ish to build"
     required: false
-    default: ""
 runs:
   using: "composite"
   steps:
