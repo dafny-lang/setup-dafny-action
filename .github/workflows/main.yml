@@ -22,13 +22,9 @@ jobs:
             dafny: 2.3.0
           - os: ubuntu-latest
             dafny: 2.3.0
-          # Test building from source from a subset of versions, but across all platforms
-          - dafny: 4.0.0
-            build-from-source: ''
+          # Test building from source from a subset of versions
           - dafny: 4.0.0
             build-from-source: v4.0.0
-          - dafny: 4.9.1
-            build-from-source: ''
           - dafny: 4.9.1
             build-from-source: v4.9.1
         
