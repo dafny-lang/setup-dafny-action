@@ -49,7 +49,7 @@ runs:
     - name: Export DAFNY_VERSION
       shell: bash
       run: |
-        echo "DAFNY_VERSION=${{ inputs.dafny_version }}" >> $GITHUB_ENV
+        echo "DAFNY_VERSION=${{ inputs.dafny-version }}" >> $GITHUB_ENV
 
     - name: Install reportgenerator
       shell: bash
