@@ -19,10 +19,8 @@ jobs:
         include:
           # Test building from source from a subset of versions
           - dafny: 4.0.0
-            os: ubuntu-latest
             build-from-source: v4.0.0
           - dafny: 4.9.1
-            os: ubuntu-latest
             build-from-source: v4.9.1
         
     steps:
