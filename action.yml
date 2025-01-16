@@ -15,10 +15,10 @@ runs:
   using: "composite"
   steps:
 
-  - if: ${{ !inputs.build-from-source }}
-    uses: actions/setup-dotnet@v4
+  - uses: actions/setup-dotnet@v4
     with:
       dotnet-version: '6.0.x'
+
   - if: ${{ !inputs.build-from-source }}
     uses: actions/setup-node@v4
     with:
