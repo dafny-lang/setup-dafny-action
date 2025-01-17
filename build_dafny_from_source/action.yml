@@ -41,6 +41,7 @@ runs:
         echo ${{ github.workspace }}/dafny/Scripts >> $GITHUB_PATH
     - name: Add dafny to PATH (Windows)
       if: runner.os == 'Windows'
+      shell: pwsh
       run: |
         Add-Content $env:GITHUB_PATH "${{ github.workspace }}/dafny/Scripts"
 
