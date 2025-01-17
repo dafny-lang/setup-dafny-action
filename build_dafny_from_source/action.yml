@@ -34,10 +34,15 @@ runs:
       run: |
         make -C dafny exe
 
-    - name: Add dafny to PATH
+    - name: Add dafny to PATH (non-Windows)
+      if: runner.os != 'Windows'
       shell: bash
       run: |
         echo ${{ github.workspace }}/dafny/Scripts >> $GITHUB_PATH
+    - name: Add dafny to PATH (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        Add-Content $env:GITHUB_PATH "${{ github.workspace }}/dafny/Scripts"
 
     - name: Export DAFNY_VERSION
       shell: bash
