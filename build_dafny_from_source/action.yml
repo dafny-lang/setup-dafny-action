@@ -1,0 +1,56 @@
+name: "Build Dafny from source"
+description: "Builds the given branch of Dafny from source"
+inputs:
+  dafny-version:
+    description: "Dafny version to build from source"
+    required: true
+    type: string
+  ref:
+    description: "The Dafny branch, tag or SHA to build"
+    required: true
+    type: string
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-java@v3
+      with:
+        distribution: "corretto"
+        java-version: "17"
+
+    - name: Checkout Dafny
+      uses: actions/checkout@v4
+      with:
+        repository: dafny-lang/dafny
+        path: dafny
+        ref: ${{ inputs.ref }}
+
+    - name: Setup Z3
+      uses: cda-tum/setup-z3@v1.6.3
+      with:
+        version: 4.12.1
+
+    - name: Build Dafny
+      shell: bash
+      run: |
+        make -C dafny exe
+
+    - name: Add dafny to PATH (non-Windows)
+      if: runner.os != 'Windows'
+      shell: bash
+      run: |
+        echo ${{ github.workspace }}/dafny/Scripts >> $GITHUB_PATH
+    - name: Add dafny to PATH (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        Add-Content $env:GITHUB_PATH "${{ github.workspace }}/dafny/Scripts"
+
+    - name: Export DAFNY_VERSION
+      shell: bash
+      run: |
+        echo "DAFNY_VERSION=${{ inputs.dafny-version }}" >> $GITHUB_ENV
+
+    - name: Install reportgenerator
+      shell: bash
+      run: |
+        dotnet tool install -g dafny-reportgenerator --version 1.*

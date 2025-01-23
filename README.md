@@ -16,7 +16,7 @@ If you need to use a specific version:
 - name: "Install Dafny"
   uses: dafny-lang/setup-dafny-action@v1
   with:
-    dafny-version: "2.3.0"
+    dafny-version: "4.9.1"
 ```
 
 You can also use `nightly-latest` to install the most recent nightly pre-release.
@@ -26,3 +26,21 @@ containing the actual resolved Dafny version: particularly useful for `nightly-l
 
 This action transparently works on macOS by detecting the running OS. You can
 just set `runs-on` to a macOS virtual environment like `macos-latest`.
+
+You can also build Dafny from source,
+if you want to run against a branch of Dafny still in development:
+
+```yml
+- name: "Install Dafny"
+  uses: dafny-lang/setup-dafny-action@v1
+  with:
+    dafny-version: "4.9.1"
+    build-from-source: support-puppies-and-rainbows
+
+```
+
+`build-from-source` can be set to a branch name, tag, commit sha,
+and so on: anything that `actions/checkout` understands.
+Note that `dafny-version` is still currently required
+in order to still set the `DAFNY_VERSION` environment variable,
+as it is not automatically extracted from the built Dafny.

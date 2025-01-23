@@ -8,16 +8,33 @@ inputs:
     description: "Dafny version to install"
     required: true
     default: "3.1.0"
+  build-from-source:
+    description: "dafny-lang/dafny commit-ish to build"
+    required: false
 runs:
   using: "composite"
   steps:
+
   - uses: actions/setup-dotnet@v4
     with:
       dotnet-version: '6.0.x'
-  - uses: actions/setup-node@v4
+
+  - if: ${{ !inputs.build-from-source }}
+    uses: actions/setup-node@v4
     with:
       node-version: 16
-  - run: node $GITHUB_ACTION_PATH/dist/index.js
+  - if: ${{ !inputs.build-from-source }}
+    run: node $GITHUB_ACTION_PATH/dist/index.js
     shell: bash
     env:
       INPUT_DAFNY-VERSION: ${{ inputs.dafny-version }}
+
+  - if: ${{ inputs.build-from-source }}
+    uses: actions/setup-dotnet@v4
+    with:
+      dotnet-version: '8.0.x'
+  - if: ${{ inputs.build-from-source }}
+    uses: ./build_dafny_from_source
+    with:
+      dafny-version: ${{ inputs.dafny-version }}
+      ref: ${{ inputs.build-from-source }}
