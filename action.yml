@@ -30,11 +30,7 @@ runs:
       INPUT_DAFNY-VERSION: ${{ inputs.dafny-version }}
 
   - if: ${{ inputs.build-from-source }}
-    uses: actions/setup-dotnet@v4
-    with:
-      dotnet-version: '8.0.x'
-  - if: ${{ inputs.build-from-source }}
-    uses: $GITHUB_ACTION_PATH/build_dafny_from_source
+    uses: dafny-dafny/build-dafny-from-source-action
     with:
       dafny-version: ${{ inputs.dafny-version }}
       ref: ${{ inputs.build-from-source }}
