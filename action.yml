@@ -30,7 +30,7 @@ runs:
       INPUT_DAFNY-VERSION: ${{ inputs.dafny-version }}
 
   - if: ${{ inputs.build-from-source }}
-    uses: dafny-dafny/build-dafny-from-source-action@v1
+    uses: dafny-lang/build-dafny-from-source-action@v1
     with:
       dafny-version: ${{ inputs.dafny-version }}
       ref: ${{ inputs.build-from-source }}
