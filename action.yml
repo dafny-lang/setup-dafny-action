@@ -17,7 +17,7 @@ runs:
 
   - uses: actions/setup-dotnet@v4
     with:
-      dotnet-version: '9.0.x'
+      dotnet-version: '8.0.x'
 
   # For the reportgenerator and older Dafnyies
   - uses: actions/setup-dotnet@v4
