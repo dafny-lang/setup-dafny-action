@@ -19,6 +19,11 @@ runs:
     with:
       dotnet-version: '8.0.x'
 
+  # For the reportgenerator and older Dafnyies
+  - uses: actions/setup-dotnet@v4
+    with:
+      dotnet-version: '6.0.x'
+
   - if: ${{ !inputs.build-from-source }}
     uses: actions/setup-node@v4
     with:
@@ -30,11 +35,7 @@ runs:
       INPUT_DAFNY-VERSION: ${{ inputs.dafny-version }}
 
   - if: ${{ inputs.build-from-source }}
-    uses: actions/setup-dotnet@v4
-    with:
-      dotnet-version: '8.0.x'
-  - if: ${{ inputs.build-from-source }}
-    uses: ./build_dafny_from_source
+    uses: dafny-lang/setup-dafny-from-source-action@v1
     with:
       dafny-version: ${{ inputs.dafny-version }}
       ref: ${{ inputs.build-from-source }}
