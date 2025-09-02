@@ -148,7 +148,19 @@ function getDistribution(platform, version) {
   const post312 =
     version.includes("nightly") ||
     versionToNumeric(version) >= versionToNumeric("3.13");
-  if (post312) {
+  const post410 =
+    version.includes("nightly") ||
+    versionToNumeric(version) >= versionToNumeric("4.11");
+  if (post410) {
+    switch (platform) {
+      case "win32":
+        return "windows-2022";
+      case "darwin":
+        return "macos-13";
+      default:
+        return "ubuntu-22.04";
+    }
+  } else if (post312) {
     switch (platform) {
       case "win32":
         return "windows-2019";
