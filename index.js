@@ -148,7 +148,21 @@ function getDistribution(platform, version) {
   const post312 =
     version.includes("nightly") ||
     versionToNumeric(version) >= versionToNumeric("3.13");
-  if (post312) {
+  // We still have nightlies from before 4.11 in use though,
+  // so we DO have to check against the date when the nightlies switched to use newer names.
+  const post410 =
+    (version.includes("nightly") && version >= "nightly-2025-08-15") ||
+    versionToNumeric(version) >= versionToNumeric("4.11");
+  if (post410) {
+    switch (platform) {
+      case "win32":
+        return "windows-2022";
+      case "darwin":
+        return "macos-13";
+      default:
+        return "ubuntu-22.04";
+    }
+  } else if (post312) {
     switch (platform) {
       case "win32":
         return "windows-2019";
